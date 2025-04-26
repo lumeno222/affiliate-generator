@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Affiliate-Link Generator</title>
+</head>
+<body style="font-family: Arial, sans-serif; padding: 20px;">
+  <h2>Dein persönlicher Digistore24-Affiliate-Link</h2>
+  <p>Gib deine Digistore24-ID ein und erhalte deinen Affiliate-Link:</p>
+  
+  <input type="text" id="affiliateId" placeholder="Deine Digistore24-ID" style="width: 100%; padding: 8px; margin-bottom: 10px;">
+  <br>
+  <button onclick="generateLink()" style="padding: 10px 20px;">Affiliate-Link generieren</button>
+  
+  <br><br>
+  <input type="text" id="affiliateLink" readonly style="width: 100%; padding: 8px;">
+  <br><br>
+  <button onclick="copyLink()" style="padding: 10px 20px;">Link kopieren</button>
+
+  <script>
+    function generateLink() {
+      var id = document.getElementById('affiliateId').value.trim();
+      if (id) {
+        var link = "https://www.digistore24.com/redir/506310/" + encodeURIComponent(id);
+        document.getElementById('affiliateLink').value = link;
+      } else {
+        alert("Bitte gib deine Digistore24-ID ein!");
+      }
+    }
+    
+    function copyLink() {
+      var copyText = document.getElementById("affiliateLink");
+      copyText.select();
+      copyText.setSelectionRange(0, 99999);
+      document.execCommand("copy");
+      alert("Link kopiert: " + copyText.value);
+    }
+  </script>
+</body>
+</html>
