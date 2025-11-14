@@ -1,53 +1,77 @@
-<script>
-document.addEventListener('DOMContentLoaded', function(){
-  try{
-    const form = document.getElementById('generatorForm') || document.querySelector('form');
-    const input = document.getElementById('digistoreId') || document.querySelector('input[type=text]');
-    const resultBox = document.getElementById('resultBox') || (() => {
-      const b = document.createElement('div'); b.id='resultBox'; b.style.display='none'; document.body.appendChild(b); return b;
-    })();
-    const resultLink = document.getElementById('resultLink') || (() => {
-      const d = document.createElement('div'); d.id='resultLink'; resultBox.appendChild(d); return d;
-    })();
-    const copyButton = document.getElementById('copyButton') || null;
-    const errorMessage = document.getElementById('errorMessage');
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Lumify Affiliate Link Generator</title>
+<style>
+  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial;margin:0;padding:20px;background:#fff}
+  .wrap{max-width:600px;margin:0 auto}
+  .card{border-radius:16px;padding:24px;background:#fff;border:1px solid #eee}
+  h1{margin:0 0 8px;font-size:20px;color:#333}
+  label{display:block;margin:14px 0 6px;font-weight:600;color:#333;font-size:13px}
+  input[type=text]{width:100%;padding:12px;border:2px solid #e8dcc8;border-radius:10px;background:#fafafa;font-size:15px}
+  button{width:100%;padding:14px;margin-top:14px;border-radius:10px;border:0;background:linear-gradient(135deg,#d4a574,#b8885a);color:#fff;font-weight:700;cursor:pointer}
+  .result{margin-top:16px;padding:12px;border-radius:10px;border:2px dashed #d4a574;background:#f8f9fa;display:none}
+  .result a{color:#d4a574;word-break:break-all;font-weight:600;text-decoration:none}
+  .error{color:#e74c3c;margin-top:8px;display:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <h1>Lumify Link Generator</h1>
+    <p style="margin:0 0 12px;color:#666">Gib deine Digistore-ID ein und klicke auf <strong>Generieren</strong>.</p>
 
-    if(!form || !input){
-      console.error('Lumify: Form oder Input fehlt', {form, input});
+    <label for="idInput">Deine Digistore-ID</label>
+    <input id="idInput" type="text" placeholder="z.B. adcuk68" autocomplete="off" />
+
+    <div class="error" id="err">Bitte gib eine gültige ID ein.</div>
+
+    <button id="genBtn" type="button">Generieren</button>
+
+    <div class="result" id="resultBox">
+      <div style="font-size:12px;color:#666;margin-bottom:8px">Dein Affiliate-Link:</div>
+      <a id="resultLink" href="#" target="_blank" rel="noopener noreferrer"></a>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var btn = document.getElementById('genBtn');
+  var input = document.getElementById('idInput');
+  var err = document.getElementById('err');
+  var box = document.getElementById('resultBox');
+  var link = document.getElementById('resultLink');
+
+  function sanitize(v){
+    if(!v) return null;
+    v = String(v).trim();
+    if(v.length === 0 || v.length > 50) return null;
+    if(!/^[A-Za-z0-9_\-]+$/.test(v)) return null;
+    return v;
+  }
+
+  btn.onclick = function(){
+    var v = sanitize(input.value);
+    if(!v){
+      err.style.display = 'block';
+      box.style.display = 'none';
       return;
     }
+    err.style.display = 'none';
+    var url = 'https://www.monefy.biz/lumifyt/?aff=' + encodeURIComponent(v);
+    link.textContent = url;
+    link.href = url;
+    box.style.display = 'block';
+    link.focus && link.focus();
+  };
 
-    function generate(id){
-      const link = 'https://www.monefy.biz/lumifyt/?aff=' + encodeURIComponent(id);
-      resultLink.textContent = link;
-      resultBox.style.display = 'block';
-      resultBox.classList && resultBox.classList.add('show');
-      console.log('Lumify erzeugt Link:', link);
-    }
-
-    form.addEventListener('submit', function(e){
-      e.preventDefault();
-      const id = input.value.trim();
-      if(!id){
-        errorMessage && errorMessage.classList && errorMessage.classList.add('show');
-        input.focus();
-        return;
-      }
-      errorMessage && errorMessage.classList && errorMessage.classList.remove('show');
-      generate(id);
-    });
-
-    if(copyButton){
-      copyButton.addEventListener('click', function(){
-        navigator.clipboard.writeText(resultLink.textContent).then(function(){
-          copyButton.textContent = '✓ Kopiert!';
-          copyButton.classList.add('copied');
-          setTimeout(()=>{ copyButton.textContent = 'In Zwischenablage kopieren'; copyButton.classList.remove('copied'); },2000);
-        }).catch(()=> alert('Kopieren fehlgeschlagen — manuell kopieren.'));
-      });
-    }
-  }catch(err){
-    console.error('Lumify - Fehler im Script', err);
-  }
-});
+  input.onkeydown = function(e){
+    if(e.key === 'Enter'){ e.preventDefault(); btn.click(); }
+  };
+})();
 </script>
+</body>
+</html>
