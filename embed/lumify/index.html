@@ -1,77 +1,61 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Lumify Affiliate Link Generator</title>
 <style>
-  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial;margin:0;padding:20px;background:#fff}
-  .wrap{max-width:600px;margin:0 auto}
-  .card{border-radius:16px;padding:24px;background:#fff;border:1px solid #eee}
-  h1{margin:0 0 8px;font-size:20px;color:#333}
-  label{display:block;margin:14px 0 6px;font-weight:600;color:#333;font-size:13px}
-  input[type=text]{width:100%;padding:12px;border:2px solid #e8dcc8;border-radius:10px;background:#fafafa;font-size:15px}
-  button{width:100%;padding:14px;margin-top:14px;border-radius:10px;border:0;background:linear-gradient(135deg,#d4a574,#b8885a);color:#fff;font-weight:700;cursor:pointer}
-  .result{margin-top:16px;padding:12px;border-radius:10px;border:2px dashed #d4a574;background:#f8f9fa;display:none}
-  .result a{color:#d4a574;word-break:break-all;font-weight:600;text-decoration:none}
-  .error{color:#e74c3c;margin-top:8px;display:none}
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial;
+  background: #fff;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.container {width:100%;max-width:550px;}
+.card{background:white;border-radius:24px;animation:slideUp .5s ease-out}
+@keyframes slideUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+.card-header{background:linear-gradient(135deg,#d4a574 0%,#b8885a 100%);padding:40px 30px;text-align:center;color:white;border-radius:24px 24px 0 0}
+.form-group{margin-bottom:25px}
+.form-label{display:block;font-weight:600;margin-bottom:10px;text-transform:uppercase;font-size:14px;color:#3a3a3a}
+.form-input{width:100%;padding:16px 18px;border:2px solid #e8dcc8;border-radius:12px;font-size:16px;background:#fafafa}
+.form-input:focus{outline:none;border-color:#d4a574;background:white}
+.btn-generate{width:100%;padding:18px;background:linear-gradient(135deg,#d4a574 0%,#b8885a 100%);color:white;border:none;border-radius:12px;font-size:16px;font-weight:600;cursor:pointer;text-transform:uppercase;letter-spacing:1px}
+.btn-generate:hover{opacity:.9}
+.result-box{margin-top:30px;padding:20px;background:#f8f9fa;border-radius:12px;border:2px dashed #d4a574;display:none}
+.result-box.show{display:block}
+.result-link{display:block;padding:15px;background:white;border-radius:8px;color:#d4a574;font-size:15px;font-weight:500;border:1px solid #e8dcc8;margin-bottom:15px;word-break:break-all}
+.btn-copy{width:100%;padding:14px;background:white;color:#d4a574;border:2px solid #d4a574;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;text-transform:uppercase}
+.btn-copy.copied{background:#4CAF50;border-color:#4CAF50;color:white}
+.error-message{color:#e74c3c;font-size:13px;margin-top:8px;display:none}
+.error-message.show{display:block}
 </style>
 </head>
 <body>
-<div class="wrap">
-  <div class="card">
-    <h1>Lumify Link Generator</h1>
-    <p style="margin:0 0 12px;color:#666">Gib deine Digistore-ID ein und klicke auf <strong>Generieren</strong>.</p>
-
-    <label for="idInput">Deine Digistore-ID</label>
-    <input id="idInput" type="text" placeholder="z.B. adcuk68" autocomplete="off" />
-
-    <div class="error" id="err">Bitte gib eine gültige ID ein.</div>
-
-    <button id="genBtn" type="button">Generieren</button>
-
-    <div class="result" id="resultBox">
-      <div style="font-size:12px;color:#666;margin-bottom:8px">Dein Affiliate-Link:</div>
-      <a id="resultLink" href="#" target="_blank" rel="noopener noreferrer"></a>
-    </div>
-  </div>
+<div class="container">
+<div class="card">
+<div class="card-header">
+<h1>Lumify Link Generator</h1>
+<p>Erstelle deinen persönlichen Affiliate-Link</p>
 </div>
-
+<div class="card-body" style="padding:40px 30px">
+<form id="generatorForm">
+<div class="form-group">
+<label class="form-label" for="digistoreId">Deine Digistore-ID</label>
+<input type="text" id="digistoreId" class="form-input" placeholder="z.B. deine-affiliate-id" autocomplete="off" required>
+<div class="error-message" id="errorMessage">Bitte gib deine Digistore-ID ein</div>
+</div>
+<button type="submit" class="btn-generate">Link generieren</button>
+</form>
+<div class="result-box" id="resultBox">
+<div class="result-link" id="resultLink"></div>
+<button class="btn-copy" id="copyButton">In Zwischenablage kopieren</button>
+</div>
+</div>
+</div>
+</div>
 <script>
-(function(){
-  var btn = document.getElementById('genBtn');
-  var input = document.getElementById('idInput');
-  var err = document.getElementById('err');
-  var box = document.getElementById('resultBox');
-  var link = document.getElementById('resultLink');
-
-  function sanitize(v){
-    if(!v) return null;
-    v = String(v).trim();
-    if(v.length === 0 || v.length > 50) return null;
-    if(!/^[A-Za-z0-9_\-]+$/.test(v)) return null;
-    return v;
-  }
-
-  btn.onclick = function(){
-    var v = sanitize(input.value);
-    if(!v){
-      err.style.display = 'block';
-      box.style.display = 'none';
-      return;
-    }
-    err.style.display = 'none';
-    var url = 'https://www.monefy.biz/lumifyt/?aff=' + encodeURIComponent(v);
-    link.textContent = url;
-    link.href = url;
-    box.style.display = 'block';
-    link.focus && link.focus();
-  };
-
-  input.onkeydown = function(e){
-    if(e.key === 'Enter'){ e.preventDefault(); btn.click(); }
-  };
-})();
-</script>
-</body>
-</html>
+const form=document.getElementById('generatorForm');
+const digist
