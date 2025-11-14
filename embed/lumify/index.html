@@ -1,61 +1,83 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="de">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Lumify Affiliate Link Generator</title>
 <style>
-body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial;
-  background: #fff;
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-}
-.container {width:100%;max-width:550px;}
-.card{background:white;border-radius:24px;animation:slideUp .5s ease-out}
-@keyframes slideUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
-.card-header{background:linear-gradient(135deg,#d4a574 0%,#b8885a 100%);padding:40px 30px;text-align:center;color:white;border-radius:24px 24px 0 0}
-.form-group{margin-bottom:25px}
-.form-label{display:block;font-weight:600;margin-bottom:10px;text-transform:uppercase;font-size:14px;color:#3a3a3a}
-.form-input{width:100%;padding:16px 18px;border:2px solid #e8dcc8;border-radius:12px;font-size:16px;background:#fafafa}
-.form-input:focus{outline:none;border-color:#d4a574;background:white}
-.btn-generate{width:100%;padding:18px;background:linear-gradient(135deg,#d4a574 0%,#b8885a 100%);color:white;border:none;border-radius:12px;font-size:16px;font-weight:600;cursor:pointer;text-transform:uppercase;letter-spacing:1px}
-.btn-generate:hover{opacity:.9}
-.result-box{margin-top:30px;padding:20px;background:#f8f9fa;border-radius:12px;border:2px dashed #d4a574;display:none}
-.result-box.show{display:block}
-.result-link{display:block;padding:15px;background:white;border-radius:8px;color:#d4a574;font-size:15px;font-weight:500;border:1px solid #e8dcc8;margin-bottom:15px;word-break:break-all}
-.btn-copy{width:100%;padding:14px;background:white;color:#d4a574;border:2px solid #d4a574;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;text-transform:uppercase}
-.btn-copy.copied{background:#4CAF50;border-color:#4CAF50;color:white}
-.error-message{color:#e74c3c;font-size:13px;margin-top:8px;display:none}
-.error-message.show{display:block}
+/* Self-contained, exact visual style */
+:root{--gold1:#d4a574;--gold2:#b8885a;--beige:#e8dcc8;--bg:#ffffff;--text:#3a3a3a}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial;color:var(--text)}
+.wrapper{max-width:720px;margin:36px auto;padding:0 16px}
+.card{background:#fff;border-radius:18px;box-shadow:0 6px 18px rgba(0,0,0,0.03);overflow:hidden}
+.header{background:linear-gradient(135deg,var(--gold1),var(--gold2));padding:34px 28px;color:#fff}
+.header h1{margin:0;font-size:22px}
+.header p{margin:6px 0 0;opacity:.95}
+.body{padding:30px}
+.row{margin-bottom:18px}
+.label{display:block;margin-bottom:8px;font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:.6px}
+.input{width:100%;padding:14px 16px;border:2px solid var(--beige);border-radius:10px;background:#fafafa;font-size:15px}
+.button{display:block;width:100%;padding:16px;border-radius:10px;border:0;background:linear-gradient(135deg,var(--gold1),var(--gold2));color:#fff;font-weight:700;text-transform:uppercase;cursor:pointer}
+.result{margin-top:16px;padding:14px;border-radius:10px;border:2px dashed var(--gold1);background:#fbfbfb;display:none}
+.result a{color:var(--gold1);word-break:break-all;font-weight:700;text-decoration:none}
+.error{color:#e74c3c;margin-top:8px;display:none}
+.small{font-size:13px;color:#666;margin-bottom:8px}
 </style>
 </head>
 <body>
-<div class="container">
-<div class="card">
-<div class="card-header">
-<h1>Lumify Link Generator</h1>
-<p>Erstelle deinen persönlichen Affiliate-Link</p>
+<div class="wrapper">
+  <div class="card">
+    <div class="header">
+      <h1>Lumify Link Generator</h1>
+      <p>Erstelle deinen persönlichen Affiliate-Link</p>
+    </div>
+
+    <div class="body">
+      <div class="row">
+        <label class="label" for="lumify_id">Deine Digistore-ID</label>
+        <input id="lumify_id" class="input" type="text" placeholder="z.B. adcuk68" autocomplete="off" />
+        <div id="lumify_err" class="error">Bitte gib eine gültige ID ein (Buchstaben, Zahlen, - oder _).</div>
+      </div>
+
+      <button id="lumify_btn" class="button" type="button">Link generieren</button>
+
+      <div id="lumify_result" class="result" role="status" aria-live="polite">
+        <div class="small">Dein Affiliate-Link:</div>
+        <a id="lumify_link" href="#" target="_blank" rel="noopener noreferrer"></a>
+      </div>
+    </div>
+  </div>
 </div>
-<div class="card-body" style="padding:40px 30px">
-<form id="generatorForm">
-<div class="form-group">
-<label class="form-label" for="digistoreId">Deine Digistore-ID</label>
-<input type="text" id="digistoreId" class="form-input" placeholder="z.B. deine-affiliate-id" autocomplete="off" required>
-<div class="error-message" id="errorMessage">Bitte gib deine Digistore-ID ein</div>
-</div>
-<button type="submit" class="btn-generate">Link generieren</button>
-</form>
-<div class="result-box" id="resultBox">
-<div class="result-link" id="resultLink"></div>
-<button class="btn-copy" id="copyButton">In Zwischenablage kopieren</button>
-</div>
-</div>
-</div>
-</div>
+
 <script>
-const form=document.getElementById('generatorForm');
-const digist
+(function(){
+  var inEl = document.getElementById('lumify_id');
+  var btn = document.getElementById('lumify_btn');
+  var err = document.getElementById('lumify_err');
+  var result = document.getElementById('lumify_result');
+  var link = document.getElementById('lumify_link');
+
+  function valid(v){
+    if(!v) return false;
+    v = String(v).trim();
+    if(v.length === 0 || v.length > 50) return false;
+    return /^[A-Za-z0-9\-_]+$/.test(v);
+  }
+
+  btn.addEventListener('click', function(){
+    var v = inEl.value;
+    if(!valid(v)){ err.style.display='block'; result.style.display='none'; return; }
+    err.style.display='none';
+    var url = 'https://www.monefy.biz/lumifyt/?aff=' + encodeURIComponent(v);
+    link.textContent = url;
+    link.href = url;
+    result.style.display = 'block';
+  });
+
+  // allow enter key to act like button
+  inEl.addEventListener('keydown', function(e){ if(e.key === 'Enter'){ e.preventDefault(); btn.click(); } });
+})();
+</script>
+</body>
+</html>
