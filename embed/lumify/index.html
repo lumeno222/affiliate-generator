@@ -3,60 +3,65 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Lumify Affiliate Link Generator</title>
-<style>
-/* Self-contained, exact visual style */
-:root{--gold1:#d4a574;--gold2:#b8885a;--beige:#e8dcc8;--bg:#ffffff;--text:#3a3a3a}
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial;color:var(--text)}
-.wrapper{max-width:720px;margin:36px auto;padding:0 16px}
-.card{background:#fff;border-radius:18px;box-shadow:0 6px 18px rgba(0,0,0,0.03);overflow:hidden}
-.header{background:linear-gradient(135deg,var(--gold1),var(--gold2));padding:34px 28px;color:#fff}
-.header h1{margin:0;font-size:22px}
-.header p{margin:6px 0 0;opacity:.95}
-.body{padding:30px}
-.row{margin-bottom:18px}
-.label{display:block;margin-bottom:8px;font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:.6px}
-.input{width:100%;padding:14px 16px;border:2px solid var(--beige);border-radius:10px;background:#fafafa;font-size:15px}
-.button{display:block;width:100%;padding:16px;border-radius:10px;border:0;background:linear-gradient(135deg,var(--gold1),var(--gold2));color:#fff;font-weight:700;text-transform:uppercase;cursor:pointer}
-.result{margin-top:16px;padding:14px;border-radius:10px;border:2px dashed var(--gold1);background:#fbfbfb;display:none}
-.result a{color:var(--gold1);word-break:break-all;font-weight:700;text-decoration:none}
-.error{color:#e74c3c;margin-top:8px;display:none}
-.small{font-size:13px;color:#666;margin-bottom:8px}
-</style>
+<title>Lumify - Affiliate Link Generator (isoliert)</title>
 </head>
 <body>
-<div class="wrapper">
-  <div class="card">
-    <div class="header">
-      <h1>Lumify Link Generator</h1>
-      <p>Erstelle deinen persönlichen Affiliate-Link</p>
-    </div>
+<script>
+(function(){
+  // Create host and attach shadow root to fully isolate style & markup
+  var host = document.createElement('div');
+  host.id = 'lumify-host-' + Math.random().toString(36).slice(2,9);
+  document.body.innerHTML = ''; // clean page to avoid collisions
+  document.body.appendChild(host);
+  var shadow = host.attachShadow({mode:'open'});
 
-    <div class="body">
-      <div class="row">
+  // Styles (keine Abhängigkeit von äußeren Klassen)
+  var style = document.createElement('style');
+  style.textContent = `
+    :host{display:block}
+    .wrapper{max-width:720px;margin:36px auto;padding:0 16px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial;color:#3a3a3a}
+    .card{background:#fff;border-radius:18px;box-shadow:0 6px 18px rgba(0,0,0,.03);overflow:hidden}
+    .header{background:linear-gradient(135deg,#d4a574,#b8885a);padding:34px 28px;color:#fff}
+    .header h1{margin:0;font-size:22px}
+    .header p{margin:6px 0 0;opacity:.95}
+    .body{padding:30px}
+    .label{display:block;margin-bottom:8px;font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:.6px}
+    .input{width:100%;padding:14px 16px;border:2px solid #e8dcc8;border-radius:10px;background:#fafafa;font-size:15px;outline:none}
+    .button{display:block;width:100%;padding:16px;border-radius:10px;border:0;background:linear-gradient(135deg,#d4a574,#b8885a);color:#fff;font-weight:700;text-transform:uppercase;cursor:pointer}
+    .result{margin-top:16px;padding:14px;border-radius:10px;border:2px dashed #d4a574;background:#fbfbfb;display:none}
+    .result a{color:#d4a574;word-break:break-all;font-weight:700;text-decoration:none}
+    .error{color:#e74c3c;margin-top:8px;display:none}
+    .small{font-size:13px;color:#666;margin-bottom:8px}
+  `;
+
+  // Markup
+  var wrapper = document.createElement('div');
+  wrapper.className = 'wrapper';
+  wrapper.innerHTML = `
+    <div class="card" role="application" aria-label="Lumify Affiliate Link Generator">
+      <div class="header"><h1>Lumify Link Generator</h1><p>Erstelle deinen persönlichen Affiliate-Link</p></div>
+      <div class="body">
         <label class="label" for="lumify_id">Deine Digistore-ID</label>
         <input id="lumify_id" class="input" type="text" placeholder="z.B. adcuk68" autocomplete="off" />
         <div id="lumify_err" class="error">Bitte gib eine gültige ID ein (Buchstaben, Zahlen, - oder _).</div>
-      </div>
-
-      <button id="lumify_btn" class="button" type="button">Link generieren</button>
-
-      <div id="lumify_result" class="result" role="status" aria-live="polite">
-        <div class="small">Dein Affiliate-Link:</div>
-        <a id="lumify_link" href="#" target="_blank" rel="noopener noreferrer"></a>
+        <button id="lumify_btn" class="button" type="button">Link generieren</button>
+        <div id="lumify_result" class="result" role="status" aria-live="polite">
+          <div class="small">Dein Affiliate-Link:</div>
+          <a id="lumify_link" href="#" target="_blank" rel="noopener noreferrer"></a>
+        </div>
       </div>
     </div>
-  </div>
-</div>
+  `;
 
-<script>
-(function(){
-  var inEl = document.getElementById('lumify_id');
-  var btn = document.getElementById('lumify_btn');
-  var err = document.getElementById('lumify_err');
-  var result = document.getElementById('lumify_result');
-  var link = document.getElementById('lumify_link');
+  shadow.appendChild(style);
+  shadow.appendChild(wrapper);
+
+  // Script logic inside shadow
+  var inEl = shadow.getElementById('lumify_id');
+  var btn = shadow.getElementById('lumify_btn');
+  var err = shadow.getElementById('lumify_err');
+  var result = shadow.getElementById('lumify_result');
+  var link = shadow.getElementById('lumify_link');
 
   function valid(v){
     if(!v) return false;
@@ -75,8 +80,16 @@ body{margin:0;background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,
     result.style.display = 'block';
   });
 
-  // allow enter key to act like button
   inEl.addEventListener('keydown', function(e){ if(e.key === 'Enter'){ e.preventDefault(); btn.click(); } });
+
+  // safeguard: if something external removes host, recreate it (resilience)
+  var observer = new MutationObserver(function(){
+    if(!document.body.contains(host)){
+      // reattach
+      document.body.appendChild(host);
+    }
+  });
+  observer.observe(document.documentElement, {childList:true, subtree:true});
 })();
 </script>
 </body>
