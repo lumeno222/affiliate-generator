@@ -3,13 +3,13 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Monefy - Affiliate Link Generator (isoliert)</title>
+<title>Modeno - Affiliate Link Generator (isoliert)</title>
 </head>
 <body>
 <script>
 (function(){
   var host = document.createElement('div');
-  host.id = 'monefy-host-' + Math.random().toString(36).slice(2,9);
+  host.id = 'modeno-host-' + Math.random().toString(36).slice(2,9);
   document.body.innerHTML = '';
   document.body.appendChild(host);
   var shadow = host.attachShadow({mode:'open'});
@@ -35,16 +35,16 @@
   var wrapper = document.createElement('div');
   wrapper.className = 'wrapper';
   wrapper.innerHTML = `
-    <div class="card" role="application" aria-label="Monefy Affiliate Link Generator">
-      <div class="header"><h1>Monefy Link Generator</h1><p>Erstelle deinen persönlichen Affiliate-Link</p></div>
+    <div class="card" role="application" aria-label="Modeno Affiliate Link Generator">
+      <div class="header"><h1>Modeno Link Generator</h1><p>Erstelle deinen persönlichen Affiliate-Link</p></div>
       <div class="body">
-        <label class="label" for="monefy_id">Deine Digistore-ID</label>
-        <input id="monefy_id" class="input" type="text" placeholder="z.B. adcuk68" autocomplete="off" />
-        <div id="monefy_err" class="error">Bitte gib eine gültige ID ein (Buchstaben, Zahlen, - oder _).</div>
-        <button id="monefy_btn" class="button" type="button">Generieren</button>
-        <div id="monefy_result" class="result" role="status" aria-live="polite">
+        <label class="label" for="modeno_id">Deine Digistore-ID</label>
+        <input id="modeno_id" class="input" type="text" placeholder="z.B. adcuk68" autocomplete="off" />
+        <div id="modeno_err" class="error">Bitte gib eine gültige ID ein (Buchstaben, Zahlen, - oder _).</div>
+        <button id="modeno_btn" class="button" type="button">Generieren</button>
+        <div id="modeno_result" class="result" role="status" aria-live="polite">
           <div class="small">Dein Affiliate-Link:</div>
-          <a id="monefy_link" href="#" target="_blank" rel="noopener noreferrer"></a>
+          <a id="modeno_link" href="#" target="_blank" rel="noopener noreferrer"></a>
         </div>
       </div>
     </div>
@@ -53,11 +53,11 @@
   shadow.appendChild(style);
   shadow.appendChild(wrapper);
 
-  var inEl = shadow.getElementById('monefy_id');
-  var btn = shadow.getElementById('monefy_btn');
-  var err = shadow.getElementById('monefy_err');
-  var result = shadow.getElementById('monefy_result');
-  var link = shadow.getElementById('monefy_link');
+  var inEl = shadow.getElementById('modeno_id');
+  var btn = shadow.getElementById('modeno_btn');
+  var err = shadow.getElementById('modeno_err');
+  var result = shadow.getElementById('modeno_result');
+  var link = shadow.getElementById('modeno_link');
 
   function valid(v){
     if(!v) return false;
@@ -70,7 +70,7 @@
     var v = inEl.value;
     if(!valid(v)){ err.style.display='block'; result.style.display='none'; return; }
     err.style.display='none';
-    var url = 'https://www.monefy.biz/t/?aff=' + encodeURIComponent(v);
+    var url = 'https://www.modeno.biz/t/?aff=' + encodeURIComponent(v);
     link.textContent = url;
     link.href = url;
     result.style.display = 'block';
