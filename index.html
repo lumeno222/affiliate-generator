@@ -3,198 +3,106 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Modeno – Affiliate-Link Generator</title>
+  <title>Affiliate-Link Generator (Embed)</title>
   <style>
-    :root{
-      --bg:#f4f7fb;
-      --card:#ffffff;
-      --text:#1f2937;
-      --muted:#6b7280;
-      --brand:#0ea5e9;
-      --brand-dark:#0284c7;
-      --warn:#ef4444;
-      --ring:rgba(14,165,233,.35);
-      --shadow:0 8px 28px rgba(2,8,23,.08);
-    }
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0;padding:24px;
-      font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;
-      background:linear-gradient(180deg,#f7fbff 0%, #eef5fb 100%);
-      color:var(--text);
-      display:flex;align-items:center;justify-content:center;
-    }
-    .container{
-      width:100%;max-width:620px;background:var(--card);
-      border-radius:16px;padding:28px;box-shadow:var(--shadow);
-      border:1px solid #eef2f7;
-    }
-    .header{display:flex;gap:12px;align-items:center;margin-bottom:18px}
-    .logo{
-      width:40px;height:40px;border-radius:10px;
-      background:linear-gradient(135deg,#0ea5e9,#22d3ee);
-      display:grid;place-items:center;color:#fff;font-weight:800;letter-spacing:.5px
-    }
-    h1{font-size:22px;margin:0}
-    p.subtitle{margin:6px 0 0;color:var(--muted);font-size:14px}
-    .badge{display:inline-block;font-size:12px;color:#065f46;background:#ecfdf5;border:1px solid #a7f3d0;border-radius:999px;padding:4px 8px;margin-left:6px}
-
-    label{display:block;font-weight:600;margin:18px 0 8px}
-    .field{position:relative}
-    input[type=text]{
-      width:100%;padding:14px 14px 14px 44px;border:1px solid #e5e7eb;
-      border-radius:12px;font-size:16px;outline:none;background:#fbfdff;
-      transition:border .15s, box-shadow .15s;
-    }
+    :root{--text:#1f2937;--muted:#6b7280;--brand:#0ea5e9;--brandd:#0284c7;--ring:rgba(14,165,233,.35)}
+    *{box-sizing:border-box} body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;color:var(--text)}
+    .wrap{max-width:640px;margin:0 auto;padding:14px}
+    h1{font-size:20px;margin:0 0 10px} .sub{color:var(--muted);font-size:13px;margin-bottom:12px}
+    label{display:block;font-weight:600;margin:12px 0 6px}
+    .fld{position:relative}
+    input[type=text]{width:100%;padding:12px 12px 12px 42px;border:1px solid #e5e7eb;border-radius:10px;font-size:15px;outline:none;background:#fff}
     input[type=text]:focus{border-color:var(--brand);box-shadow:0 0 0 4px var(--ring)}
-    .prefix{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:#9aa4b2;font-size:14px}
-
-    .row{display:flex;gap:10px;flex-wrap:wrap}
-    button{
-      flex:1 0 auto;background:var(--brand);color:#fff;border:0;border-radius:10px;
-      padding:12px 16px;font-size:15px;font-weight:600;cursor:pointer;
-      transition:transform .04s ease, background .15s ease, opacity .15s;
-    }
-    button:hover{background:var(--brand-dark)}
-    button:active{transform:translateY(1px)}
-    button.secondary{background:#0f172a0d;color:#0f172a}
-    button.secondary:hover{background:#0f172a14}
+    .pf{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:#9aa4b2}
+    .row{display:flex;gap:8px;margin-top:10px}
+    button{flex:1 0 auto;border:0;border-radius:10px;padding:10px 14px;font-weight:600;cursor:pointer;background:var(--brand);color:#fff}
+    button:hover{background:var(--brandd)} button.secondary{background:#0f172a0d;color:#0f172a}
     button:disabled{opacity:.5;cursor:not-allowed}
-
-    .hint{font-size:12px;color:var(--muted);margin-top:6px}
-    .error{color:var(--warn);font-size:13px;margin-top:8px;display:none}
-
-    .link-preview{
-      display:flex;align-items:center;gap:8px;margin-top:10px;
-      padding:10px 12px;border:1px solid #e5e7eb;border-radius:10px;background:#fbfdff;
-      font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
-      font-size:13px;overflow:auto
-    }
-
-    .toast{
-      position:fixed;left:50%;bottom:22px;transform:translateX(-50%);
-      background:#061727;color:#e6f7ff;border:1px solid #08324c;
-      padding:10px 14px;border-radius:10px;box-shadow:var(--shadow);font-size:14px;display:none
-    }
+    .err{color:#ef4444;font-size:13px;display:none;margin-top:6px}
+    .out{margin-top:10px;font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Courier New",monospace;font-size:13px;border:1px solid #e5e7eb;border-radius:10px;padding:10px;word-break:break-all}
   </style>
 </head>
 <body>
-  <div class="container" role="main">
-    <div class="header">
-      <div class="logo" aria-hidden="true">AFF</div>
-      <div>
-        <h1>Affiliate-Link Generator</h1>
-        <p class="subtitle">
-          Gib deine <strong>Digistore24-ID</strong> ein und erhalte deinen persönlichen Link
-          <span class="badge">modeno.biz</span>
-        </p>
-      </div>
+  <div class="wrap">
+    <h1>Affiliate-Link Generator</h1>
+    <div class="sub">Gib deine Digistore24-ID ein. Der Link wird automatisch erstellt.</div>
+
+    <label for="affId">Digistore24-ID</label>
+    <div class="fld">
+      <span class="pf">@</span>
+      <input id="affId" type="text" placeholder="z. B. maxmustermann23" maxlength="64" autocomplete="username" />
     </div>
+    <div id="err" class="err">Ungültige ID. Erlaubt sind a-z, 0-9, Punkt, Unterstrich, Bindestrich.</div>
 
-    <label for="affiliateId">Deine Digistore24-ID</label>
-    <div class="field">
-      <span class="prefix">@</span>
-      <input id="affiliateId" type="text" placeholder="z. B. maxmustermann23" autocomplete="username" inputmode="latin" maxlength="64" />
-    </div>
-    <div class="hint">Erlaubt: Buchstaben, Zahlen, Punkt, Unterstrich, Bindestrich.</div>
-    <div id="err" class="error">Ungültige ID. Nur a-z, 0-9, ., _, - sind erlaubt.</div>
+    <label for="affLink" style="margin-top:10px">Dein Affiliate-Link</label>
+    <input id="affLink" type="text" readonly placeholder="—" />
 
-    <label for="affiliateLink" style="margin-top:18px">Dein Affiliate-Link</label>
-    <input id="affiliateLink" type="text" readonly placeholder="Wird nach Eingabe generiert …" />
-    <div class="link-preview" id="preview" style="display:none"></div>
+    <div id="preview" class="out" style="display:none"></div>
 
-    <div class="row" style="margin-top:14px">
-      <button id="genBtn" type="button">Link generieren</button>
+    <div class="row">
+      <button id="genBtn" type="button">Generieren</button>
       <button id="copyBtn" type="button" class="secondary" disabled>Kopieren</button>
       <button id="openBtn" type="button" class="secondary" disabled>Öffnen</button>
     </div>
   </div>
 
-  <div id="toast" class="toast" role="status" aria-live="polite">In die Zwischenablage kopiert.</div>
-
   <script>
-    // Basis-URL (fest): https://www.modeno.biz/startseite/?aff=<ID>
-    const LINK_BASE = "https://www.modeno.biz/startseite/?aff=";
+    // Default-Basis (kann via ?base=… überschrieben werden)
+    const DEFAULT_BASE = "https://www.modeno.biz/startseite/?aff=";
 
-    const idInput   = document.getElementById("affiliateId");
-    const linkOut   = document.getElementById("affiliateLink");
-    const genBtn    = document.getElementById("genBtn");
-    const copyBtn   = document.getElementById("copyBtn");
-    const openBtn   = document.getElementById("openBtn");
-    const err       = document.getElementById("err");
-    const preview   = document.getElementById("preview");
-    const toast     = document.getElementById("toast");
+    function getBaseFromQuery() {
+      try {
+        const q = new URLSearchParams(location.search);
+        const b = q.get("base");
+        if (!b) return null;
+        // nur erlauben, wenn schon mit aff= endet, um Missbrauch zu vermeiden
+        const decoded = decodeURIComponent(b);
+        if (!/^https?:\/\/[^ ]+aff=$/i.test(decoded)) return null;
+        return decoded;
+      } catch { return null; }
+    }
 
-    const showToast = (msg) => {
-      toast.textContent = msg;
-      toast.style.display = "block";
-      setTimeout(()=> toast.style.display = "none", 1800);
-    };
+    const LINK_BASE = getBaseFromQuery() || DEFAULT_BASE;
 
-    const validId = (v) => /^[a-zA-Z0-9._-]+$/.test(v);
+    const idInput = document.getElementById("affId");
+    const linkOut = document.getElementById("affLink");
+    const genBtn  = document.getElementById("genBtn");
+    const copyBtn = document.getElementById("copyBtn");
+    const openBtn = document.getElementById("openBtn");
+    const err     = document.getElementById("err");
+    const preview = document.getElementById("preview");
 
-    function generateLink(){
-      const raw = idInput.value.trim();
-      if(!raw){
-        err.style.display = "block";
-        err.textContent = "Bitte gib deine Digistore24-ID ein.";
-        return;
-      }
-      if(!validId(raw)){
-        err.style.display = "block";
-        err.textContent = "Ungültige ID. Erlaubt: a-z, 0-9, Punkt, Unterstrich, Bindestrich.";
-        return;
-      }
-      err.style.display = "none";
+    const validId = v => /^[A-Za-z0-9._-]+$/.test(v || "");
+
+    function generate() {
+      const raw = (idInput.value || "").trim();
+      if (!raw) { err.style.display="block"; err.textContent="Bitte gib deine Digistore24-ID ein."; return; }
+      if (!validId(raw)) { err.style.display="block"; err.textContent="Ungültige ID. Erlaubt: a-z, 0-9, ., _, -."; return; }
+      err.style.display="none";
       const url = LINK_BASE + encodeURIComponent(raw);
       linkOut.value = url;
-      preview.style.display = "flex";
+      preview.style.display="block";
       preview.textContent = url;
-      copyBtn.disabled = false;
-      openBtn.disabled = false;
-      try{ localStorage.setItem("digistore_aff", raw); }catch(e){}
+      copyBtn.disabled = false; openBtn.disabled = false;
+      try { localStorage.setItem("digistore_aff", raw); } catch {}
     }
 
     async function copyLink(){
-      const v = linkOut.value;
-      if(!v) return;
-      try{
-        await navigator.clipboard.writeText(v);
-        showToast("In die Zwischenablage kopiert.");
-      }catch(e){
-        linkOut.select();
-        document.execCommand("copy");
-        showToast("Kopiert (Fallback).");
-      }
+      if (!linkOut.value) return;
+      try { await navigator.clipboard.writeText(linkOut.value); }
+      catch { linkOut.select(); document.execCommand("copy"); }
     }
 
-    function openLink(){
-      const v = linkOut.value;
-      if(v) window.open(v, "_blank", "noopener,noreferrer");
-    }
+    function openLink(){ if (linkOut.value) window.open(linkOut.value, "_blank", "noopener,noreferrer"); }
 
-    genBtn.addEventListener("click", generateLink);
+    genBtn.addEventListener("click", generate);
     copyBtn.addEventListener("click", copyLink);
     openBtn.addEventListener("click", openLink);
+    idInput.addEventListener("keydown", e => { if (e.key === "Enter") generate(); });
+    idInput.addEventListener("input", ()=>{ copyBtn.disabled=true; openBtn.disabled=true; linkOut.value=""; preview.style.display="none"; err.style.display="none"; });
 
-    idInput.addEventListener("keydown", (e)=>{ if(e.key==="Enter") generateLink(); });
-    idInput.addEventListener("input", ()=>{
-      copyBtn.disabled = true;
-      openBtn.disabled = true;
-      linkOut.value = "";
-      preview.style.display = "none";
-      err.style.display = "none";
-    });
-
-    // Prefill aus localStorage
-    try{
-      const saved = localStorage.getItem("digistore_aff");
-      if(saved){
-        idInput.value = saved;
-        generateLink();
-      }
-    }catch(e){}
+    // Prefill
+    try { const s = localStorage.getItem("digistore_aff"); if (s) { idInput.value = s; generate(); } } catch {}
   </script>
 </body>
 </html>
